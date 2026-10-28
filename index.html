@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio de Análisis - Teoría de las Organizaciones (TO_ACT16)</title>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .instruction-text {
+            font-size: 0.75rem;
+            line-height: 1.3;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .analysis-card {
+            transition: all 0.3s ease;
+            border-left: 8px solid #6366f1;
+        }
+        .analysis-card:focus-within {
+            border-left-color: #818cf8;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15);
+        }
+        /* CORREGIDO: Ctrl+P directo legible — neutralizar fondos oscuros de la página principal */
+        @media print {
+            .no-print { display: none !important; }
+            section, div, header, nav, table, th, td, tr, h1, h2, h3, h4, p, label, span, textarea, input {
+                background: transparent !important;
+                color: #000 !important;
+                box-shadow: none !important;
+                border-color: #999 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-16">
+
+<!-- BANNER INSTITUCIONAL -->
+<div class="bg-indigo-900/60 border-b border-indigo-700/50 text-indigo-200 text-xs py-2 px-4 no-print flex justify-between items-center">
+    <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-bold tracking-wide uppercase text-[10px]">Politécnico Grancolombiano &bull; Entorno Tecnopedagógico de Aprendizaje</span>
+    </div>
+</div>
+
+<!-- CABECERA DOCENTE E IDENTIFICACIÓN -->
+<header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 text-white py-8 px-6 no-print shadow-2xl sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="flex items-center gap-5">
+      <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-4 rounded-3xl shadow-lg flex items-center justify-center">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+      </div>
+      <div>
+        <h1 class="text-2xl md:text-3xl font-black tracking-tight uppercase italic text-white">Laboratorio de Análisis</h1>
+        <p class="text-indigo-400 text-xs font-bold uppercase tracking-widest mt-1">Teoría de las Organizaciones &bull; Fase de Resultados</p>
+      </div>
+    </div>
+
+    <!-- IDENTIFICACIÓN DEL GRUPO -->
+    <div class="bg-slate-800/80 p-5 rounded-[2rem] border border-slate-700/60 w-full md:w-auto min-w-[360px] shadow-inner">
+      <div class="grid grid-cols-1 gap-3">
+        <div class="flex items-center gap-3">
+          <label class="text-[10px] text-indigo-300 font-black uppercase w-28">ID Actividad</label> 
+          <input id="input-actividad-id" value="TO_ACT16" readonly class="bg-slate-900/80 border border-slate-700 outline-none w-full text-xs font-bold text-amber-400 rounded-xl px-3 py-1.5 cursor-not-allowed" type="text">
+        </div>
+        <div class="flex items-center gap-3">
+          <label class="text-[10px] text-indigo-300 font-black uppercase w-28">Materia</label> 
+          <input id="input-materia" value="Teoría de las Organizaciones" readonly class="bg-slate-900/80 border border-slate-700 outline-none w-full text-xs font-bold text-slate-300 rounded-xl px-3 py-1.5 cursor-not-allowed" type="text">
+        </div>
+        <div class="flex items-center gap-3">
+          <label class="text-[10px] text-indigo-300 font-black uppercase w-28">Grupo No. <span class="text-rose-400">*</span></label> 
+          <input id="input-grupo" class="bg-slate-900 border border-slate-700 focus:border-indigo-500 outline-none w-full text-sm font-bold text-white placeholder:text-slate-600 rounded-xl px-3 py-1.5 transition-all" type="text" placeholder="Ej: 05">
+        </div>
+        <div class="flex items-center gap-3">
+          <label class="text-[10px] text-indigo-300 font-black uppercase w-28">Integrantes <span class="text-rose-400">*</span></label> 
+          <textarea id="input-participantes" class="bg-slate-900 border border-slate-700 focus:border-indigo-500 outline-none w-full text-xs h-10 resize-none text-indigo-100 placeholder:text-slate-600 rounded-xl px-3 py-1.5 transition-all" placeholder="Nombres de los investigadores..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto p-4 md:p-8">
+
+  <!-- RUTA DE TRABAJO AUTÓNOMO -->
+  <section class="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl mb-8 no-print">
+    <h3 class="text-xs font-black uppercase tracking-widest text-indigo-400 mb-4 flex items-center gap-2">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      Ruta de Trabajo Autónomo
+    </h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+      <div class="bg-slate-800/50 border border-slate-700/50 p-4 rounded-2xl">
+        <span class="text-indigo-400 font-black block mb-1">Paso 1: Lectura & Categorización</span>
+        <p class="text-slate-400 text-[11px]">Consulte la guía metodológica y determine sus categorías teóricas y emergentes.</p>
+      </div>
+      <div class="bg-slate-800/50 border border-slate-700/50 p-4 rounded-2xl">
+        <span class="text-indigo-400 font-black block mb-1">Paso 2: Diligenciamiento Guiado</span>
+        <p class="text-slate-400 text-[11px]">Complete cada bloque analítico (Evidencia, Interpretación, Teoría e Implicación).</p>
+      </div>
+      <div class="bg-slate-800/50 border border-slate-700/50 p-4 rounded-2xl">
+        <span class="text-amber-400 font-black block mb-1">Paso 3: Transmisión (Obligatorio)</span>
+        <p class="text-slate-400 text-[11px]">Haga clic en <strong>"Enviar Trabajo"</strong> para registrar la entrega en Google Sheets.</p>
+      </div>
+      <div class="bg-slate-800/50 border border-slate-700/50 p-4 rounded-2xl">
+        <span class="text-emerald-400 font-black block mb-1">Paso 4: Exportación de Evidencia</span>
+        <p class="text-slate-400 text-[11px]">Descargue el reporte oficial en PDF para subir la evidencia a la plataforma.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAVEGACIÓN ENTRE SECCIONES -->
+  <nav class="flex bg-slate-900 p-2 rounded-[2rem] shadow-xl mb-10 no-print max-w-2xl mx-auto border border-slate-800">
+    <button id="btn-guia" onclick="switchTab('tab-guia')" class="flex-1 py-3.5 rounded-2xl font-bold text-xs transition-all duration-300 bg-indigo-600 text-white shadow-lg">1. GUÍA Y METODOLOGÍA</button> 
+    <button id="btn-consola" onclick="switchTab('tab-consola')" class="flex-1 py-3.5 rounded-2xl font-bold text-xs transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800">2. CONSOLA DE ANÁLISIS</button>
+  </nav>
+
+  <!-- SECCIÓN 1: GUÍA DE CATEGORIZACIÓN (PROCESO INDUCTIVO) -->
+  <section id="tab-guia" class="tab-content active space-y-8 animate-in fade-in duration-500">
+    <div class="bg-slate-900 p-8 md:p-14 rounded-[3rem] shadow-xl border border-slate-800 relative overflow-hidden">
+      <div class="max-w-3xl relative z-10">
+        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[10px] font-black uppercase px-3 py-1 rounded-full tracking-widest inline-block mb-4">Marco Metodológico</span>
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-6 leading-tight">Proceso Inductivo de 
+          <br>
+          <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Categorización Emergente</span>
+        </h2>
+        <p class="text-slate-300 text-sm md:text-base mb-10 font-medium">Sigan estos tres pasos para transformar los datos brutos recolectados en hallazgos teóricos de alto nivel:</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+        <div class="bg-slate-800/80 p-8 rounded-[2.5rem] border-b-4 border-slate-600">
+          <div class="text-4xl mb-4">🔍</div>
+          <h3 class="font-black text-white mb-2 uppercase text-xs tracking-widest">1. Puntos Centrales</h3>
+          <p class="text-xs text-slate-400 leading-relaxed font-medium">Identifiquen las 
+            <strong class="text-slate-200">ideas fuerza</strong> en sus respuestas o entrevistas. ¿Cuál es el núcleo central expresado por los autores o informantes?
+          </p>
+        </div>
+        <div class="bg-indigo-950/40 p-8 rounded-[2.5rem] border-b-4 border-indigo-500 border border-indigo-900/50">
+          <div class="text-4xl mb-4">🧩</div>
+          <h3 class="font-black text-indigo-300 mb-2 uppercase text-xs tracking-widest">2. Agrupación</h3>
+          <p class="text-xs text-indigo-200/80 leading-relaxed font-medium">Busquen patrones explicativos. Si varios autores o testimonios coinciden en el mismo sentido, agrúpenlos en un solo núcleo temático.</p>
+        </div>
+        <div class="bg-emerald-950/40 p-8 rounded-[2.5rem] border-b-4 border-emerald-500 border border-emerald-900/50">
+          <div class="text-4xl mb-4">🏷️</div>
+          <h3 class="font-black text-emerald-300 mb-2 uppercase text-xs tracking-widest">3. Nombramiento</h3>
+          <p class="text-xs text-emerald-200/80 leading-relaxed font-medium">Asignen un concepto técnico formal a ese grupo de hallazgos. Ese constructo académico es su 
+            <strong class="text-emerald-300">Categoría Emergente</strong>.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 p-8 bg-gradient-to-r from-indigo-950 to-slate-900 border border-indigo-800/50 rounded-[2.5rem] text-white relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row gap-6 items-center">
+          <div class="flex-1 text-xs md:text-sm leading-relaxed text-indigo-100 italic">
+            <h4 class="text-amber-400 font-black text-base mb-2 uppercase not-italic flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              Rigor Investigativo Institucional:
+            </h4>
+            "El análisis científico en la Teoría de las Organizaciones trasciende la mera descripción. Si la categoría teórica inicial no alcanza a explicar la complejidad del fenómeno observado en el campo, el estudiante debe erigir conceptualmente la categoría emergente."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RÚBRICA INSTITUCIONAL DE EVALUACIÓN -->
+    <div class="bg-slate-900 p-8 md:p-10 rounded-[3rem] border border-slate-800">
+      <h3 class="text-lg font-black text-white mb-6 uppercase tracking-wider flex items-center gap-2">
+        <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        Rúbrica de Evaluación (5 Criterios)
+      </h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-800 text-indigo-300 uppercase text-[10px] font-black tracking-wider">
+            <tr>
+              <th class="p-4 rounded-tl-2xl">Criterio / Ítem</th>
+              <th class="p-4">Excelente (5.0)</th>
+              <th class="p-4">Sobresaliente (4.0)</th>
+              <th class="p-4">Aceptable (3.0)</th>
+              <th class="p-4 rounded-tr-2xl">Insuficiente (1.0 - 2.0)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            <tr>
+              <td class="p-4 font-bold text-white bg-slate-800/40">1. Rigor en el Dato (Evidencia)</td>
+              <td class="p-4">Cita textual o evidencia de campo exacta, pertinente y sin alteración.</td>
+              <td class="p-4">Evidencia clara pero con leves fallas de delimitación.</td>
+              <td class="p-4">Evidencia incompleta o parcialmente relevante.</td>
+              <td class="p-4">Datos inventados, imprecisos o inexistentes.</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white bg-slate-800/40">2. Profundidad Interpretativa</td>
+              <td class="p-4">Explicación profunda del sentido del dato dentro del contexto de la Pyme.</td>
+              <td class="p-4">Explicación satisfactoria con buen nivel de análisis.</td>
+              <td class="p-4">Interpretación meramente descriptiva o superficial.</td>
+              <td class="p-4">Resumen sin análisis de sentido.</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white bg-slate-800/40">3. Contraste Teórico</td>
+              <td class="p-4">Conexión precisa con autores vistos (Taylor, Fayol, Weber, Mayo, etc.).</td>
+              <td class="p-4">Conecta con teorías de clase con leve falta de precisión.</td>
+              <td class="p-4">Menciona autores de forma tangencial o poco sustentada.</td>
+              <td class="p-4">Sin articulación ni referentes teóricos.</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white bg-slate-800/40">4. Implicación y Pronóstico</td>
+              <td class="p-4">Determina consecuencias futuras y operativas de forma crítica y fundada.</td>
+              <td class="p-4">Plantea consecuencias lógicas y viables para la organización.</td>
+              <td class="p-4">Impactos genéricos con escaso sustento.</td>
+              <td class="p-4">No identifica consecuencias ni impacto futuro.</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white bg-slate-800/40">5. Categorización Emergente</td>
+              <td class="p-4">Estructuración brillante de categorías teóricas y emergentes coherentes.</td>
+              <td class="p-4">Categorías formuladas correctamente con buena nomenclatura.</td>
+              <td class="p-4">Nomenclatura imprecisa o categorías poco claras.</td>
+              <td class="p-4">Omisión de la categorización.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2: CONSOLA DE ANÁLISIS (WORKSPACE WORKFLOW) -->
+  <section id="tab-consola" class="tab-content space-y-8">
+    <div id="work-area" class="space-y-8">
+
+      <!-- BARRA DE ACCIONES DE ARCHIVO Y TRANSMISIÓN -->
+      <div class="flex flex-col lg:flex-row gap-4 justify-between items-stretch lg:items-center no-print bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-lg">
+        <!-- ACCIONES SECUNDARIAS (GUEST / RESPALDOS) -->
+        <div class="flex flex-wrap gap-3">
+          <button onclick="downloadBackup()" class="bg-slate-800 text-slate-200 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-slate-700 transition border border-slate-700">
+            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            📥 Guardar (.JSON)
+          </button> 
+          <label class="bg-slate-800 text-slate-200 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-slate-700 cursor-pointer border border-slate-700 transition">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            📤 Cargar (.JSON)
+            <input id="json-file-input" class="hidden" type="file" accept=".json" onchange="handleFileUpload(event)">
+          </label>
+        </div>
+
+        <!-- ACCIONES PRINCIPALES (ENVÍO Y PDF CON DOBLE CANDADO) -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <!-- BOTÓN PRINCIPAL CALL TO ACTION -->
+          <button id="btn-send-data" onclick="sendData()" class="bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:shadow-indigo-500/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 border border-indigo-400/30">
+            <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+            🚀 Enviar Trabajo a Google Sheets
+          </button>
+
+          <!-- BOTÓN VISTA PREVIA PDF (BLOQUEADO INICIALMENTE) -->
+          <div class="relative group">
+            <button id="btn-pdf-preview" onclick="openPreview()" disabled class="w-full sm:w-auto bg-amber-600 opacity-50 cursor-not-allowed text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-md transition-all flex items-center justify-center gap-2 border border-amber-500/40">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+              📄 Exportar a PDF / Imprimir
+            </button>
+            <div id="pdf-tooltip" class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-slate-900 border border-slate-700 text-amber-300 text-[10px] p-2 rounded-lg shadow-xl whitespace-nowrap z-50">
+              ⚠️ Debes hacer clic en 'Enviar Trabajo' para habilitar el reporte PDF.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENEDOR DE BLOQUES ANALÍTICOS DINÁMICOS -->
+      <div id="analysis-blocks-container" class="space-y-10">
+        <!-- Los bloques se renderizarán dinámicamente mediante JS -->
+      </div>
+
+      <!-- BOTÓN AÑADIR NUEVO BLOQUE -->
+      <button onclick="addNewBlock()" class="w-full py-10 border-2 border-dashed border-slate-800 rounded-[2.5rem] text-slate-500 font-black hover:border-indigo-500/50 hover:text-indigo-400 hover:bg-slate-900/50 transition-all flex flex-col items-center gap-2 no-print group">
+        <span class="text-4xl group-hover:scale-110 transition-transform text-indigo-500">+</span> 
+        <span class="text-xs uppercase tracking-[0.3em]">Añadir Nuevo Bloque de Análisis</span>
+      </button>
+
+    </div>
+  </section>
+</main>
+
+<!-- STATUS BAR -->
+<div class="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 p-2.5 text-center text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] no-print z-50 flex justify-between px-8 items-center">
+  <span id="save-msg" class="flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Autoguardado Sincronizado
+  </span>
+  <span id="trans-status" class="text-amber-400 font-bold">Estado: Pendiente de Transmisión</span>
+</div>
+
+<!-- LÓGICA JAVASCRIPT COMPLETA -->
+<script>
+    // CONSTANTE OBLIGATORIA DEL WEBHOOK DE GOOGLE APPS SCRIPT
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbykP5mOpfvgjO-R3aMf2t8tzAg-nc5Tc2cpVmtpRh33C-ZwYUW9G9-CWr-bq7zVEv5s/exec";
+    const ACTIVIDAD_ID_CONST = "TO_ACT16";
+
+    // ESTADO GLOBAL DE TRANSMISIÓN (DOBLE CANDADO)
+    let datosTransmitidos = false;
+    let lastTransmittedHash = ""; // CORREGIDO: hash de integridad del contenido transmitido
+
+    // ESTRUCTURA INICIAL DE BLOQUES ANALÍTICOS
+    let blocksData = [
+        {
+            initial: "",
+            emergent: "",
+            dato: "",
+            interpret: "",
+            teoria: "",
+            impli: ""
+        }
+    ];
+
+    // INICIALIZACIÓN DE LA APLICACIÓN
+    document.addEventListener('DOMContentLoaded', () => {
+        loadLocalStorage();
+        renderBlocks();
+        setupInputListeners();
+    });
+
+    // CAMBIO DE PESTAÑAS (GUÍA / CONSOLA)
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+
+        const btnGuia = document.getElementById('btn-guia');
+        const btnConsola = document.getElementById('btn-consola');
+
+        if (tabId === 'tab-guia') {
+            btnGuia.className = "flex-1 py-3.5 rounded-2xl font-bold text-xs transition-all duration-300 bg-indigo-600 text-white shadow-lg";
+            btnConsola.className = "flex-1 py-3.5 rounded-2xl font-bold text-xs transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800";
+        } else {
+            btnConsola.className = "flex-1 py-3.5 rounded-2xl font-bold text-xs transition-all duration-300 bg-indigo-600 text-white shadow-lg";
+            btnGuia.className = "flex-1 py-3.5 rounded-2xl font-bold text-xs transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800";
+        }
+    }
+
+    // CORREGIDO: hash de integridad que cubre TODO el contenido (grupo, participantes y todos los bloques)
+    function computeHash() {
+        return JSON.stringify({
+            grupo: document.getElementById('input-grupo')?.value || "",
+            participantes: document.getElementById('input-participantes')?.value || "",
+            blocksData: blocksData
+        });
+    }
+
+    // CORREGIDO: bloquear/desbloquear el PDF de forma centralizada
+    function lockPdfButton() {
+        const btnPdf = document.getElementById('btn-pdf-preview');
+        if (btnPdf) {
+            btnPdf.disabled = true;
+            btnPdf.classList.add('opacity-50', 'cursor-not-allowed', 'bg-amber-600');
+            btnPdf.classList.remove('bg-emerald-600', 'hover:bg-emerald-500', 'hover:scale-[1.02]', 'cursor-pointer');
+        }
+        const tooltip = document.getElementById('pdf-tooltip');
+        if (tooltip) tooltip.style.display = '';
+        const statusEl = document.getElementById('trans-status');
+        if (statusEl) {
+            statusEl.className = 'text-amber-400 font-bold';
+            statusEl.innerText = 'Estado: Pendiente de Transmisión';
+        }
+    }
+
+    function unlockPdfButton() {
+        const btnPdf = document.getElementById('btn-pdf-preview');
+        if (btnPdf) {
+            btnPdf.disabled = false;
+            btnPdf.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-amber-600');
+            btnPdf.classList.add('bg-emerald-600', 'hover:bg-emerald-500', 'hover:scale-[1.02]', 'cursor-pointer');
+        }
+        const tooltip = document.getElementById('pdf-tooltip');
+        if (tooltip) tooltip.style.display = 'none';
+        const statusEl = document.getElementById('trans-status');
+        if (statusEl) {
+            statusEl.className = 'text-emerald-400 font-bold';
+            statusEl.innerText = 'Estado: ✅ Registrado en Google Sheets';
+        }
+    }
+
+    // CORREGIDO: si el estudiante edita algo tras enviar, el candado del PDF se re-activa
+    function checkTransmissionIntegrity() {
+        if (datosTransmitidos && computeHash() !== lastTransmittedHash) {
+            datosTransmitidos = false;
+            lockPdfButton();
+            showNotification("⚠️ Detectamos cambios después del envío. Vuelve a hacer clic en 'Enviar Trabajo' para actualizar la entrega.");
+        }
+    }
+
+    // RENDERIZADO DINÁMICO DE BLOQUES ANALÍTICOS
+    function renderBlocks() {
+        const container = document.getElementById('analysis-blocks-container');
+        container.innerHTML = '';
+
+        blocksData.forEach((block, index) => {
+            const blockEl = document.createElement('div');
+            blockEl.className = 'analysis-card bg-slate-900 rounded-[2.5rem] shadow-xl border border-slate-800 overflow-hidden';
+            blockEl.innerHTML = `
+                <!-- CONFRONTACIÓN DE CATEGORÍAS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 bg-slate-950/60 border-b border-slate-800">
+                    <div class="p-6 md:p-8 border-b md:border-b-0 md:border-r border-slate-800">
+                        <label class="block text-[11px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-1">Categoría Inicial (Teórica)</label>
+                        <p class="instruction-text italic">Defina la categoría de su marco teórico con la que se relaciona este hallazgo.</p>
+                        <input value="${escapeHtml(block.initial)}" oninput="updateBlockData(${index}, 'initial', this.value)" class="w-full p-3.5 bg-slate-900 border border-slate-700 rounded-xl font-bold text-sm text-indigo-200 outline-none focus:border-indigo-500 shadow-inner transition-all" type="text" placeholder="Ej: Estructura Organizacional">
+                    </div>
+                    <div class="p-6 md:p-8 bg-indigo-950/20">
+                        <label class="block text-[11px] font-black text-indigo-300 uppercase tracking-[0.2em] mb-1">Categoría Emergente (Hallazgo)</label>
+                        <p class="instruction-text italic">Nombre el nuevo concepto construido tras agrupar los puntos centrales de las respuestas.</p>
+                        <input value="${escapeHtml(block.emergent)}" oninput="updateBlockData(${index}, 'emergent', this.value)" class="w-full p-3.5 bg-slate-900 border border-indigo-900/60 rounded-xl font-bold text-sm text-indigo-100 outline-none focus:border-indigo-400 shadow-inner transition-all" type="text" placeholder="Ej: Desarticulación Jerárquica Informal">
+                    </div>
+                </div>
+
+                <!-- PILARES ANALÍTICOS -->
+                <div class="p-6 md:p-8 space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- EL DATO -->
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-indigo-500"></span> 1. El Dato (Evidencia)
+                            </label>
+                            <p class="instruction-text italic">Pegue aquí la cita textual del autor o del entrevistado sin modificarla. Es la evidencia pura.</p>
+                            <textarea oninput="updateBlockData(${index}, 'dato', this.value)" class="w-full p-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs italic text-slate-300 min-h-[110px] outline-none focus:border-indigo-500 transition-all resize-y" placeholder="Inserte evidencia textual...">${escapeHtml(block.dato)}</textarea>
+                        </div>
+                        <!-- INTERPRETACIÓN -->
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-purple-500"></span> 2. Interpretación (Sentido)
+                            </label>
+                            <p class="instruction-text italic">Explique con sus propias palabras qué significa ese dato para la organización estudiada. Traduzca la realidad.</p>
+                            <textarea oninput="updateBlockData(${index}, 'interpret', this.value)" class="w-full p-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-slate-300 min-h-[110px] outline-none focus:border-indigo-500 transition-all resize-y" placeholder="Dé sentido al dato...">${escapeHtml(block.interpret)}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- TEORÍA -->
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span> 3. Teoría (Contraste Académico)
+                            </label>
+                            <p class="instruction-text italic">Conecte su interpretación con un autor visto en clase o de su marco teórico (Taylor, Fayol, Mayo, Weber, etc.).</p>
+                            <textarea oninput="updateBlockData(${index}, 'teoria', this.value)" class="w-full p-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-slate-300 min-h-[110px] outline-none focus:border-indigo-500 transition-all resize-y" placeholder="Contraste con la teoría...">${escapeHtml(block.teoria)}</textarea>
+                        </div>
+                        <!-- IMPLICACIÓN -->
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 4. Implicación (Consecuencia)
+                            </label>
+                            <p class="instruction-text italic">Determine qué pasará con la gestión de esta organización si esta situación continúa. ¿Cuál es el impacto futuro?</p>
+                            <textarea oninput="updateBlockData(${index}, 'impli', this.value)" class="w-full p-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-slate-300 min-h-[110px] outline-none focus:border-indigo-500 transition-all resize-y" placeholder="Determine el impacto final...">${escapeHtml(block.impli)}</textarea>
+                        </div>
+                    </div>
+
+                    ${blocksData.length > 1 ? `
+                    <div class="flex justify-end pt-4 border-t border-slate-800">
+                        <button onclick="removeBlock(${index})" class="text-rose-400 hover:text-rose-300 text-[10px] font-black uppercase transition-all flex items-center gap-1 no-print">
+                            🗑️ Eliminar Bloque Analítico
+                        </button>
+                    </div>` : ''}
+                </div>
+            `;
+            container.appendChild(blockEl);
+        });
+    }
+
+    // AÑADIR NUEVO BLOQUE
+    function addNewBlock() {
+        checkTransmissionIntegrity();
+        blocksData.push({
+            initial: "",
+            emergent: "",
+            dato: "",
+            interpret: "",
+            teoria: "",
+            impli: ""
+        });
+        renderBlocks();
+        saveLocalStorage();
+    }
+
+    // ELIMINAR BLOQUE
+    function removeBlock(index) {
+        if (blocksData.length > 1) {
+            blocksData.splice(index, 1);
+            renderBlocks();
+            saveLocalStorage();
+        }
+    }
+
+    // ACTUALIZAR DATOS DE BLOQUE EN TIEMPO REAL
+    function updateBlockData(index, field, value) {
+        blocksData[index][field] = value;
+        checkTransmissionIntegrity(); // CORREGIDO: re-bloqueo del PDF si se edita tras el envío
+        saveLocalStorage();
+    }
+
+    // CONFIGURAR ESCUCHADORES EN INPUTS GENERALES
+    function setupInputListeners() {
+        ['input-grupo', 'input-participantes'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', () => {
+                    checkTransmissionIntegrity();
+                    saveLocalStorage();
+                });
+            }
+        });
+    }
+
+    // ESCAPAR STRINGS HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    // AUTOGUARDADO EN LOCALSTORAGE
+    function saveLocalStorage() {
+        const payload = {
+            actividad_id: ACTIVIDAD_ID_CONST,
+            materia: "Teoría de las Organizaciones",
+            grupo: document.getElementById('input-grupo')?.value || "",
+            participantes: document.getElementById('input-participantes')?.value || "",
+            blocksData: blocksData,
+            transmitted: datosTransmitidos ? 'true' : 'false', // CORREGIDO: persistir el candado
+            hash: lastTransmittedHash
+        };
+        try { localStorage.setItem('TO_ACT16_SAVED_DATA', JSON.stringify(payload)); } catch (e) { /* Storage restringido */ }
+        
+        const saveMsg = document.getElementById('save-msg');
+        if (saveMsg) {
+            saveMsg.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Sincronizado en tiempo real';
+            setTimeout(() => {
+                saveMsg.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Autoguardado Sincronizado';
+            }, 1200);
+        }
+    }
+
+    // CARGAR DESDE LOCALSTORAGE
+    function loadLocalStorage() {
+        const saved = localStorage.getItem('TO_ACT16_SAVED_DATA');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                if (parsed.grupo) document.getElementById('input-grupo').value = parsed.grupo;
+                if (parsed.participantes) document.getElementById('input-participantes').value = parsed.participantes;
+                if (parsed.blocksData && Array.isArray(parsed.blocksData) && parsed.blocksData.length > 0) {
+                    blocksData = parsed.blocksData;
+                }
+                // CORREGIDO: restaurar el candado solo si el hash coincide exactamente con lo transmitido
+                lastTransmittedHash = parsed.hash || "";
+                if (parsed.transmitted === 'true' && computeHash() === lastTransmittedHash) {
+                    datosTransmitidos = true;
+                    unlockPdfButton();
+                } else {
+                    datosTransmitidos = false;
+                    lockPdfButton();
+                }
+            } catch(e) {
+                console.error("Error al cargar avance de LocalStorage:", e);
+                lockPdfButton();
+            }
+        }
+    }
+
+    // DESCARGAR BACKUP EN ARCHIVO JSON
+    function downloadBackup() {
+        const payload = {
+            actividad_id: ACTIVIDAD_ID_CONST,
+            materia: "Teoría de las Organizaciones",
+            grupo: document.getElementById('input-grupo')?.value || "",
+            participantes: document.getElementById('input-participantes')?.value || "",
+            blocksData: blocksData,
+            estado: datosTransmitidos ? "Entregado" : "Borrador", // CORREGIDO: honestidad del respaldo
+            timestamp: new Date().toISOString()
+        };
+        
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `Respaldo_TO_ACT16_Grupo_${payload.grupo || '00'}.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    }
+
+    // CORREGIDO: saneamiento de bloques importados (evita crash en validateForm por campos ausentes)
+    function sanitizeBlocks(arr) {
+        const fields = ['initial', 'emergent', 'dato', 'interpret', 'teoria', 'impli'];
+        if (!Array.isArray(arr)) return null;
+        const clean = arr
+            .filter(b => typeof b === 'object' && b !== null && !Array.isArray(b))
+            .map(b => {
+                const nb = {};
+                fields.forEach(f => { nb[f] = typeof b[f] === 'string' ? b[f] : ""; });
+                return nb;
+            });
+        return clean.length > 0 ? clean : null;
+    }
+
+    // CARGAR RESPALDO DESDE JSON
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (typeof data !== 'object' || Array.isArray(data) || !data) throw new Error("Formato inválido");
+
+                // CORREGIDO: rechazar respaldos de otra actividad
+                if (data.actividad_id && data.actividad_id !== ACTIVIDAD_ID_CONST) {
+                    showNotification("❌ El archivo pertenece a otra actividad (" + escapeHtml(String(data.actividad_id)) + "). No se cargó ningún dato.");
+                    return;
+                }
+
+                if (data.grupo) document.getElementById('input-grupo').value = data.grupo;
+                if (data.participantes) document.getElementById('input-participantes').value = data.participantes;
+                const cleanBlocks = sanitizeBlocks(data.blocksData);
+                if (cleanBlocks) {
+                    blocksData = cleanBlocks;
+                    renderBlocks();
+                } else if (data.blocksData !== undefined) {
+                    throw new Error("Bloques inválidos");
+                }
+                // CORREGIDO: cargar un JSON invalida la transmisión previa; hay que volver a enviar
+                datosTransmitidos = false;
+                lockPdfButton();
+                saveLocalStorage();
+                showNotification("✅ Respaldo cargado con éxito. Recuerda transmitir el trabajo para habilitar el PDF.");
+            } catch (error) {
+                showNotification("❌ Error: El archivo JSON cargado no es un respaldo válido de esta actividad.");
+            } finally {
+                event.target.value = ''; // Permitir recargar el mismo archivo
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // MAPEO DE DATOS ESTÁNDAR DE CAPTURA (getFormData)
+    // CORREGIDO: TODOS los bloques se transmiten — antes solo viajaba blocksData[0] y los
+    // bloques 2+ se perdían en Google Sheets aunque sí aparecían en el PDF
+    function getFormData() {
+        const joinAll = (field, label) =>
+            blocksData.map((b, i) => `B${i + 1} ${label}: ${b[field]}`).join(" || ");
+
+        return {
+            materia: document.getElementById('input-materia')?.value || "Teoría de las Organizaciones",
+            actividad_id: ACTIVIDAD_ID_CONST,
+            grupo: document.getElementById('input-grupo')?.value || "",
+            participantes: document.getElementById('input-participantes')?.value || "",
+            item1: blocksData.length + " bloque(s) || " + blocksData.map((b, i) => `B${i + 1} [Cat.Teórica: ${b.initial}] [Cat.Emerg: ${b.emergent}]`).join(" || "),
+            item2: joinAll('dato', '[Dato]'),
+            item3: joinAll('interpret', '[Interpretación]'),
+            item4: joinAll('teoria', '[Teoría]'),
+            item5: joinAll('impli', '[Implicación]'),
+            estado: "Entregado"
+        };
+    }
+
+    // VALIDACIÓN PREVIA DE CAMPOS COMPLETOS
+    function validateForm() {
+        const grupo = document.getElementById('input-grupo')?.value.trim();
+        const participantes = document.getElementById('input-participantes')?.value.trim();
+
+        if (!grupo || !participantes) {
+            showNotification("⚠️ Incompleto: Ingrese el Grupo y Nombres de Integrantes.");
+            return false;
+        }
+
+        for (let i = 0; i < blocksData.length; i++) {
+            const b = blocksData[i];
+            if (!b.initial.trim() || !b.emergent.trim() || !b.dato.trim() || !b.interpret.trim() || !b.teoria.trim() || !b.impli.trim()) {
+                showNotification(`⚠️ Incompleto: Diligencie todos los campos en el Bloque Analítico #${i + 1}.`);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // TRANSMISIÓN AUTOMÁTICA A GOOGLE SHEETS
+    const sendData = async () => {
+        if (!validateForm()) return;
+
+        const btnSend = document.getElementById('btn-send-data');
+        const origText = btnSend.innerHTML;
+        btnSend.disabled = true;
+        btnSend.innerHTML = `⌛ Transmitiendo a Sheets...`;
+
+        try {
+            await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(getFormData())
+            });
+
+            // DESBLOQUEO SECUENCIAL DEL DOBLE CANDADO
+            datosTransmitidos = true;
+            lastTransmittedHash = computeHash(); // CORREGIDO: registrar el hash exacto de lo transmitido
+            
+            // HABILITAR BOTÓN PDF
+            unlockPdfButton();
+
+            // Persistir el estado de transmisión
+            saveLocalStorage();
+
+            showNotification("✅ Transmisión Exitosa: Tus respuestas (" + blocksData.length + " bloque(s)) han sido guardadas en la hoja del docente.");
+        } catch (error) {
+            // CORREGIDO: mensaje honesto — el PDF sigue bloqueado si falló la transmisión
+            datosTransmitidos = false;
+            lockPdfButton();
+            showNotification("❌ Error de red: el trabajo NO se transmitió. Descarga tu respaldo (.JSON) o reintenta el envío.");
+        } finally {
+            btnSend.disabled = false;
+            btnSend.innerHTML = origText;
+        }
+    };
+
+    // VISTA PREVIA E IMPRESIÓN A PDF (CON DOBLE CANDADO DE SEGURIDAD)
+    function openPreview() {
+        // CORREGIDO: candado reforzado con hash — bloquea si hay ediciones no transmitidas
+        if (!datosTransmitidos || computeHash() !== lastTransmittedHash) {
+            showNotification("⛔ Acción bloqueada: Primero debes presionar el botón 'Enviar Trabajo' (sin editar después) para registrar tus respuestas en el sistema docente.");
+            return;
+        }
+
+        const materia = document.getElementById('input-materia')?.value || "Teoría de las Organizaciones";
+        const actividad_id = ACTIVIDAD_ID_CONST;
+        const grupo = document.getElementById('input-grupo')?.value || "N/A";
+        const participantes = document.getElementById('input-participantes')?.value || "N/A";
+
+        let blocksHtml = '';
+        blocksData.forEach((b, idx) => {
+            blocksHtml += `
+                <div style="margin-bottom: 25px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px; page-break-inside: auto;">
+                    <h3 style="color: #1e40af; margin-top: 0; font-size: 14px; border-bottom: 2px solid #1e40af; padding-bottom: 5px; page-break-after: avoid;">
+                        Bloque Analítico #${idx + 1}
+                    </h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px;">
+                        <tr>
+                            <td style="width: 50%; padding: 6px; background: #f1f5f9; font-weight: bold; border: 1px solid #cbd5e1;">Categoría Inicial (Teórica):</td>
+                            <td style="width: 50%; padding: 6px; background: #e0e7ff; font-weight: bold; border: 1px solid #cbd5e1;">Categoría Emergente (Hallazgo):</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px; border: 1px solid #cbd5e1; word-break: break-word;">${escapeHtml(b.initial)}</td>
+                            <td style="padding: 6px; border: 1px solid #cbd5e1; color: #1e40af; word-break: break-word;">${escapeHtml(b.emergent)}</td>
+                        </tr>
+                    </table>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px;">
+                        <div style="border: 1px solid #e2e8f0; padding: 8px; border-radius: 4px; background: #fafafa; word-break: break-word; overflow-wrap: break-word;">
+                            <strong>1. El Dato (Evidencia):</strong>
+                            <p style="font-style: italic; margin: 4px 0 0 0; color: #334155;">"${escapeHtml(b.dato)}"</p>
+                        </div>
+                        <div style="border: 1px solid #e2e8f0; padding: 8px; border-radius: 4px; word-break: break-word; overflow-wrap: break-word;">
+                            <strong>2. Interpretación (Sentido):</strong>
+                            <p style="margin: 4px 0 0 0; color: #334155;">${escapeHtml(b.interpret)}</p>
+                        </div>
+                        <div style="border: 1px solid #e2e8f0; padding: 8px; border-radius: 4px; word-break: break-word; overflow-wrap: break-word;">
+                            <strong>3. Teoría (Contraste):</strong>
+                            <p style="margin: 4px 0 0 0; color: #334155;">${escapeHtml(b.teoria)}</p>
+                        </div>
+                        <div style="border: 1px solid #e2e8f0; padding: 8px; border-radius: 4px; word-break: break-word; overflow-wrap: break-word;">
+                            <strong>4. Implicación (Consecuencia):</strong>
+                            <p style="margin: 4px 0 0 0; color: #334155;">${escapeHtml(b.impli)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        const printWindow = window.open('', '_blank');
+
+        // CORREGIDO: manejar pop-ups bloqueados (antes: crash en printWindow.document)
+        if (!printWindow) {
+            showNotification("⚠️ Ventana emergente bloqueada por el navegador. Permite los pop-ups para ver el reporte PDF.");
+            return;
+        }
+
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Reporte de Resultados - ${escapeHtml(actividad_id)}</title>
+                <style>
+                    @page { size: A4; margin: 15mm; }
+                    * { box-sizing: border-box; }
+                    body {
+                        font-family: system-ui, -apple-system, sans-serif;
+                        color: #0f172a;
+                        padding: 30px;
+                        line-height: 1.4;
+                        margin: 0;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    .header-box { border-bottom: 3px solid #1e40af; padding-bottom: 15px; margin-bottom: 20px; }
+                    .meta-grid {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 10px;
+                        font-size: 12px;
+                        background: #f8fafc;
+                        padding: 12px;
+                        border-radius: 6px;
+                        margin-bottom: 20px;
+                        word-break: break-word;
+                        overflow-wrap: break-word;
+                    }
+                    .btn-print { background: #1e40af; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-bottom: 20px; font-size: 12px; }
+                    @media print {
+                        .no-print { display: none !important; }
+                        body { padding: 0; }
+                    }
+                    @media (max-width: 600px) {
+                        body { padding: 15px; }
+                        .meta-grid { grid-template-columns: 1fr; }
+                    }
+                </style>
+            </head>
+            <body>
+                <button class="btn-print no-print" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
+
+                <div class="header-box">
+                    <h1 style="color: #1e40af; margin: 0; font-size: 20px; text-transform: uppercase;">Politécnico Grancolombiano</h1>
+                    <h2 style="margin: 5px 0 0 0; font-size: 16px; color: #334155;">Laboratorio de Análisis - ${escapeHtml(materia)}</h2>
+                </div>
+
+                <div class="meta-grid">
+                    <div><strong>ID Actividad:</strong> ${escapeHtml(actividad_id)}</div>
+                    <div><strong>Grupo No.:</strong> ${escapeHtml(grupo)}</div>
+                    <div style="grid-column: span 2;"><strong>Integrantes:</strong> ${escapeHtml(participantes)}</div>
+                    <div><strong>Fecha de Generación:</strong> ${new Date().toLocaleString()}</div>
+                    <div><strong>Estado de Transmisión:</strong> Registrado en Sistema Docente</div>
+                </div>
+
+                <h2 style="font-size: 14px; text-transform: uppercase; color: #1e40af; margin-bottom: 15px;">Matriz de Categorización y Análisis</h2>
+
+                ${blocksHtml}
+
+                <div style="margin-top: 30px; text-align: center; font-size: 10px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+                    Documento de Evidencia Generado Automáticamente &bull; Politécnico Grancolombiano
+                </div>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+    }
+
+    // NOTIFICACIÓN INTERACTIVA
+    // CORREGIDO: desmontar notificaciones previas para que no se apilen
+    function showNotification(message) {
+        document.querySelectorAll('.app-notification').forEach(n => n.remove());
+        const notif = document.createElement('div');
+        notif.className = 'app-notification fixed top-5 right-5 bg-slate-900 border border-indigo-500 text-white font-bold text-xs px-5 py-3.5 rounded-2xl shadow-2xl z-50 transition-all transform translate-y-0 opacity-100 flex items-center gap-2 max-w-[90vw]';
+        notif.innerHTML = message;
+        document.body.appendChild(notif);
+
+        setTimeout(() => {
+            notif.style.opacity = '0';
+            notif.style.transform = 'translateY(-10px)';
+            setTimeout(() => notif.remove(), 300);
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>
